@@ -1,56 +1,57 @@
 package main
+
 //código para fazer uma lista simples e encadeada
 
 import (
-  "fmt"
-  "container/list" //acho que é a biblioteca para estruturas de dados em geral  
+	"container/list" //acho que é a biblioteca para estruturas de dados em geral
+	"fmt"
 )
 
-func main(){
-  var lista  list.List 
+func main() {
+	var lista list.List
 
-  lista.PushBack(32)
-  lista.PushBack(19)
-  lista.PushBack(90)
-  
-  //percorrendo a lista
+	lista.PushBack(32)
+	lista.PushBack(19)
+	lista.PushBack(90)
 
-  for i := lista.Front(); i != nil ; i = i.Next(){
-    fmt.Println(i.Value.(int))
-  } 
+	//percorrendo a lista
 
-  //agora lendo do terminal
+	for i := lista.Front(); i != nil; i = i.Next() {
+		fmt.Println(i.Value.(int))
+	}
 
-  fmt.Println("lendo do terminal agora ")
-  fmt.Println("Quantos dígitos vc quer adicionar: ")
-  
-  var quantidade int
-  fmt.Scanln(&quantidade)
+	//agora lendo do terminal
 
-  fmt.Println("Você agora alocou uma lista de tamanho: ",quantidade)
+	fmt.Println("lendo do terminal agora ")
+	fmt.Println("Quantos dígitos vc quer adicionar: ")
 
-  var novos_num [] int
+	var quantidade int
+	fmt.Scanln(&quantidade)
 
-  for i:= 0; i != quantidade; i++{
-    fmt.Println("Digite o proximo número indíce %d: ",i+1)
-    var item int 
-    fmt.Scanln(&item)
-    novos_num = append(novos_num , item)
-  }
+	fmt.Println("Você agora alocou uma lista de tamanho: ", quantidade)
 
-  //adicionando a lista
-  for _,num := range novos_num{
-    lista.PushBack(num)
-  }
+	var novos_num []int
 
-  //mostrando o resto
-  fmt.Println("Lista nova ")
-  for i := lista.Front() ; i != nil ; i=i.Next(){
-    fmt.Println(i.Value.(int))
-  }
+	for i := 0; i != quantidade; i++ {
+		fmt.Println("Digite o proximo número indíce %d: ", i+1)
+		var item int
+		fmt.Scanln(&item)
+		novos_num = append(novos_num, item)
+	}
+
+	//adicionando a lista
+	for _, num := range novos_num {
+		lista.PushBack(num)
+	}
+
+	//mostrando o resto
+	fmt.Println("Lista nova ")
+	for i := lista.Front(); i != nil; i = i.Next() {
+		fmt.Println(i.Value.(int))
+	}
 }
 
-//TODO 
-/* 
+//TODO
+/*
 Rescrever alguns métodos do container/list no caso popcack e front e pushback e pushfront, quantidade head e tail, next e mais alguns métodos
 */
