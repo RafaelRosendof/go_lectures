@@ -5,6 +5,7 @@ type tree struct {
 	num_filhos int
 	esq *tree
 	dir *tree
+	alt int
 	}
 
 
