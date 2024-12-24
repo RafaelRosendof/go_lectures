@@ -1,0 +1,21 @@
+codigo,titulo,autor,genero,ano,editora,numPaginas
+1,The Great Gatsby,F. Scott Fitzgerald,Fiction,1925,Charles Scribner's Sons,218
+2,1984,George Orwell,Dystopia,1949,Secker & Warburg,328
+3,To Kill a Mockingbird,Harper Lee,Fiction,1960,J.B. Lippincott & Co.,281
+4,Pride and Prejudice,Jane Austen,Romance,1813,T. Egerton,279
+5,The Catcher in the Rye,J.D. Salinger,Coming-of-Age,1951,Little, Brown and Company,214
+6,Animal Farm,George Orwell,Satire,1945,Secker & Warburg,112
+7,Lord of the Flies,William Golding,Allegory,1954,Faber and Faber,224
+8,Brave New World,Aldous Huxley,Dystopia,1932,Chatto & Windus,311
+9,Jane Eyre,Charlotte Brontë,Romance,1847,Smith, Elder & Co.,500
+10,Crime and Punishment,Fyodor Dostoevsky,Philosophy,1866,The Russian Messenger,671
+11,The Hobbit,J.R.R. Tolkien,Fantasy,1937,George Allen & Unwin,310
+12,Fahrenheit 451,Ray Bradbury,Science Fiction,1953,Ballantine Books,158
+13,Wuthering Heights,Emily Brontë,Gothic,1847,Thomas Cautley Newby,416
+14,Moby-Dick,Herman Melville,Adventure,1851,Harper & Brothers,635
+15,The Odyssey,Homer,Classics,-800,Unknown,560
+16,Hamlet,William Shakespeare,Tragedy,1603,N/A,238
+17,Macbeth,William Shakespeare,Tragedy,1606,N/A,160
+18,Alice's Adventures in Wonderland,Lewis Carroll,Fantasy,1865,Macmillan,201
+19,War and Peace,Leo Tolstoy,Historical Fiction,1869,The Russian Messenger,1225
+20,The Divine Comedy,Dante Alighieri,Poetry,1320,N/A,432
