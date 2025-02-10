@@ -19,20 +19,23 @@ func makeArray(size int) []int {
 func ArrayMultiply(array []int, wg *sync.WaitGroup) {
 	defer wg.Done()
 	for i := 0; i < len(array); i++ {
-		array[i] = int(math.Sqrt(float64(array[i])) * math.Sqrt(float64(array[i])) * math.Sqrt(float64(array[i])))
 		array[i] = array[i] * array[i]
 		array[i] = int(math.Sqrt(float64(array[i])) * math.Sqrt(float64(array[i])) * math.Sqrt(float64(array[i])))
 		array[i] = int(math.Sqrt(float64(array[i])) * math.Sqrt(float64(array[i])) * math.Sqrt(float64(array[i])))
+		array[i] = int(math.Exp(float64(array[i])) * 42 * math.Sqrt(float64(array[i])))
+		array[i] = int(math.Exp(float64(array[i])) * 42 * math.Sqrt(float64(array[i])))
+		array[i] = int(math.Tanh(float64(array[i])) * math.Tanh(float64(array[i])))
 	}
 }
 
-func ArrayMultiply2(array []int) {
+func ArrayMultiplyNormal(array []int) {
 	for i := 0; i < len(array); i++ {
-		array[i] = int(math.Sqrt(float64(array[i])) * math.Sqrt(float64(array[i])) * math.Sqrt(float64(array[i])))
 		array[i] = array[i] * array[i]
 		array[i] = int(math.Sqrt(float64(array[i])) * math.Sqrt(float64(array[i])) * math.Sqrt(float64(array[i])))
 		array[i] = int(math.Sqrt(float64(array[i])) * math.Sqrt(float64(array[i])) * math.Sqrt(float64(array[i])))
-
+		array[i] = int(math.Exp(float64(array[i])) * 42 * math.Sqrt(float64(array[i])))
+		array[i] = int(math.Exp(float64(array[i])) * 42 * math.Sqrt(float64(array[i])))
+		array[i] = int(math.Tanh(float64(array[i])) * math.Tanh(float64(array[i])))
 	}
 }
 
@@ -56,10 +59,9 @@ func main() {
 	x8 := makeArray(size)
 
 	var wg sync.WaitGroup
-	wg.Add(8)
+	wg.Add(4)
 
 	time1 := time.Now()
-
 	go ArrayMultiply(x1, &wg)
 	go ArrayMultiply(x2, &wg)
 	go ArrayMultiply(x3, &wg)
@@ -76,26 +78,20 @@ func main() {
 
 	fmt.Println("Feito com o tempo de execução: Concorrente", tempoConcorrente)
 
-	fmt.Println(x1[:90])
-	fmt.Println(x2[:90])
-	fmt.Println(x3[:90])
-	fmt.Println(x4[:90])
-
-	x1 = makeArray(size)
-
-	time33 := time.Now()
-	ArrayMultiply2(x1)
-	ArrayMultiply2(x2)
-	ArrayMultiply2(x3)
-	ArrayMultiply2(x4)
-	ArrayMultiply2(x5)
-	ArrayMultiply2(x6)
-	ArrayMultiply2(x7)
-	ArrayMultiply2(x8)
+	fmt.Println("Tempo total concorrente foi:  ", time2.Sub(time1))
+	fmt.Println(x1[:20])
+	fmt.Println(x2[:20])
+	fmt.Println(x3[:20])
+	fmt.Println(x4[:20])
 
 	time3 := time.Now()
 
-	tempoSequencial := time3.Sub(time33)
+	ArrayMultiplyNormal(x1)
+	ArrayMultiplyNormal(x2)
+	ArrayMultiplyNormal(x3)
+	ArrayMultiplyNormal(x4)
+	time4 := time.Now()
 
-	fmt.Println("Feito com o tempo de execução: ", tempoSequencial)
+	fmt.Println("tempo total normal foi : ", time4.Sub(time3))
+
 }
