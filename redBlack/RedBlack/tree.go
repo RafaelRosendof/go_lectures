@@ -4,7 +4,7 @@ import "fmt"
 
 /*
 // Funções básicas
-tree* arv_criaVazia();
+tree* arv_criaVazia(); Feito
 No* arv_criaNo(No* pai, No node, Color color);
 bool arv_vazia(tree* arv);                Feito
 // Funções específicas para Red-Black Tr
@@ -14,8 +14,8 @@ No* rotacaoEsquerda(tree* arv, No* no);
 No* rotacaoDireita(tree* arv, No* no);
 bool arv_removeRB(tree* arv, int score);
 void corrigeRemocao(No* no);
-void imprimeOrdem(No* raiz);
-void imprimePreOrdem(No* raiz);
+void imprimeOrdem(No* raiz); Feito
+void imprimePreOrdem(No* raiz); Feito
 No* arv_busca(No* raiz, int score);  feito
 int arv_altura(No* raiz);
 
@@ -87,4 +87,13 @@ func PrintaInOrdem(raiz *Node) {
 	PrintaInOrdem(raiz.esq)
 	PrintaNode(raiz)
 	PrintaInOrdem(raiz.dir)
+}
+
+func PrintaPreOrdem(raiz *Node) {
+	if raiz == nil {
+		return
+	}
+	PrintaNode(raiz)
+	PrintaPreOrdem(raiz.esq)
+	PrintaPreOrdem(raiz.dir)
 }
