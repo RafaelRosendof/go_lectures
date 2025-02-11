@@ -4,9 +4,10 @@ import "fmt"
 
 /*
 // Funções básicas
-tree* arv_criaVazia(); Feito
-No* arv_criaNo(No* pai, No node, Color color);
-bool arv_vazia(tree* arv);                Feito
+tree* Arv_criaArv(); Feito
+No* Arv_criaNo(No* pai, No node, Color color);
+bool ArvoreVazia(tree* arv);
+
 // Funções específicas para Red-Black Tr
 tree* arv_insereRB(tree* arv, No node);
 void corrigeInsercao(No* no);
@@ -14,10 +15,11 @@ No* rotacaoEsquerda(tree* arv, No* no);
 No* rotacaoDireita(tree* arv, No* no);
 bool arv_removeRB(tree* arv, int score);
 void corrigeRemocao(No* no);
-void imprimeOrdem(No* raiz); Feito
-void imprimePreOrdem(No* raiz); Feito
-No* arv_busca(No* raiz, int score);  feito
-int arv_altura(No* raiz);
+
+void ImprimeOrdem(No* raiz); Feito
+void ImprimePreOrdem(No* raiz); Feito
+No* Busca_no(No* raiz, int score);  feito
+int Altura_tree(No* raiz); feito
 
 ver uma lib de go para imprimir em formato de desenho
 */
@@ -38,6 +40,30 @@ type Node struct {
 
 type tree struct {
 	raiz *Node
+}
+
+func Altura_tree(raiz *Node) int {
+	if raiz == nil {
+		return 0
+	}
+
+	alt1 := Altura_tree(raiz.esq) //checar isso
+	alt2 := Altura_tree(raiz.esq) // isso tbm
+
+	if alt1 > alt2 {
+		return alt1 + 1
+	}
+	return alt2 + 1
+}
+
+func Arv_criaNo(score int, pai *Node) *Node {
+	return &Node{
+		score: score,
+		cor:   Red,
+		esq:   nil,
+		dir:   nil,
+		pai:   pai,
+	}
 }
 
 func ArvoreVazia(tree *tree) bool {
@@ -96,4 +122,45 @@ func PrintaPreOrdem(raiz *Node) {
 	PrintaNode(raiz)
 	PrintaPreOrdem(raiz.esq)
 	PrintaPreOrdem(raiz.dir)
+}
+
+func RotacaoEsq(arv *tree, no *Node) *Node {
+	filhoDir := no.dir
+	no.dir = filhoDir.esq
+	if filhoDir.esq != nil {
+		filhoDir.esq.pai = no
+	}
+	filhoDir.pai = no.pai
+	if no.pai == nil {
+		arv.raiz = filhoDir
+	} else if no == no.pai.esq {
+		no.pai.esq = filhoDir
+	} else {
+		no.pai.dir = filhoDir
+	}
+	filhoDir.esq = no
+	no.pai = filhoDir
+	return filhoDir
+}
+func RotacaoDir(arv *tree, no *Node) *Node {
+
+	filhoEsq := no.esq
+	no.esq = filhoEsq.dir
+	if filhoEsq.dir != nil {
+		filhoEsq.dir.pai = no
+	}
+
+	filhoEsq.pai = no.pai
+	if no.pai == nil {
+		arv.raiz = filhoEsq
+	} else if no == no.pai.dir {
+		no.pai.dir = filhoEsq
+	} else {
+		no.pai.esq = filhoEsq
+	}
+
+	filhoEsq.dir = no
+	no.pai = filhoEsq
+	return filhoEsq
+
 }
