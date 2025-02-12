@@ -1,6 +1,12 @@
 package HS
 
-import "fmt"
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"strconv"
+	"strings"
+)
 
 type Node struct {
 	codigo     int
@@ -141,6 +147,8 @@ func Inserir_heap(heap *Heap, no Node) {
 		heap.capacidade *= 2
 	}
 
+	no.prioridade = CalculaPrioridade(&no)
+
 	heap.pacotes = append(heap.pacotes, no)
 	heap.tamanho++
 
@@ -169,4 +177,57 @@ func Remover_heap(heap *Heap, codigo int) bool {
 
 	fmt.Println("Nenhum elemento com esse código encontrado")
 	return false
+}
+
+func Leitor_csv(heap *Heap, csv_file string) *Heap {
+
+	arq, err := os.Open(csv_file)
+
+	if err != nil {
+		fmt.Println("Arquivo não encontrado: ")
+		return nil
+	}
+
+	defer arq.Close()
+
+	leitor := bufio.NewScanner(arq)
+
+	first := true
+
+	for leitor.Scan() {
+		linha := leitor.Text()
+
+		if first {
+			first = false
+			continue
+		}
+
+		campos := strings.Split(linha, ",")
+
+		if len(campos) < 7 {
+			fmt.Println("Linha inválida: ", linha)
+			continue
+		}
+
+		codigo, _ := strconv.Atoi(campos[0])
+		size, _ := strconv.Atoi(campos[3])
+		latencia, _ := strconv.Atoi(campos[4])
+
+		trecho := Node{
+			codigo:     codigo,
+			endOrigem:  campos[1],
+			endDestino: campos[2],
+			size:       size,
+			latencia:   latencia,
+		}
+
+		//prioridade := CalculaPrioridade(&trecho)
+
+		Inserir_heap(heap, trecho)
+
+	}
+	if err := leitor.Err(); err != nil {
+		fmt.Println("Erro ao ler o arquivo: ", err)
+	}
+	return heap
 }

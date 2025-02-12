@@ -142,6 +142,7 @@ func RotacaoEsq(arv *tree, no *Node) *Node {
 	no.pai = filhoDir
 	return filhoDir
 }
+
 func RotacaoDir(arv *tree, no *Node) *Node {
 
 	filhoEsq := no.esq
@@ -163,4 +164,88 @@ func RotacaoDir(arv *tree, no *Node) *Node {
 	no.pai = filhoEsq
 	return filhoEsq
 
+}
+
+func Arv_insereRB(arv *tree, no *Node) {
+	if arv.raiz == nil {
+		no.cor = Black
+		arv.raiz = no
+		return
+	}
+
+	y := (*Node)(nil)
+	x := arv.raiz
+
+	for x != nil {
+		y = x
+		if no.score < x.score {
+			x = x.esq
+		} else {
+			x = x.dir
+		}
+	}
+
+	no.pai = y
+
+	if no.score < y.score {
+		y.esq = no
+	} else {
+		y.dir = no
+	}
+
+	no.esq = nil
+	no.dir = nil
+	no.cor = Red
+
+	AjusteIRB(arv, no)
+
+}
+
+func AjusteIRB(arv *tree, no *Node) {
+	for no != arv.raiz && no.pai != nil && no.pai.cor == Red {
+		if no.pai == no.pai.pai.esq { //pai é filho esquerdo do avo
+			y := no.pai.pai.dir //Tio é filho direito do avo
+
+			if y != nil && y.cor == Red { //tio vermelho
+				no.pai.cor = Black
+				y.cor = Black
+				no.pai.pai.cor = Red
+				no = no.pai.pai
+			} else {
+				//no sendo fi Dir
+				if no == no.pai.dir {
+					no = no.pai
+					RotacaoEsq(arv, no)
+				}
+				// FI esq
+				no.pai.cor = Black
+				no.pai.pai.cor = Red
+				RotacaoDir(arv, no.pai.pai)
+			}
+
+		} else { // pai é filho direito do avo
+			y := no.pai.pai.esq //tio filho esq do avo
+
+			if y != nil && y.cor == Red {
+				no.pai.cor = Black
+				y.cor = Black
+				no.pai.pai.cor = Red
+				no = no.pai.pai //
+			} else { //no é filho esq
+				if no == no.pai.esq {
+					no = no.pai
+					RotacaoDir(arv, no)
+				}
+
+				//filho direito
+				no.pai.cor = Black
+				no.pai.pai.cor = Red
+				RotacaoEsq(arv, no.pai.pai)
+			}
+
+		}
+	}
+
+	arv.raiz.cor = Black
+	//acho que foi
 }
