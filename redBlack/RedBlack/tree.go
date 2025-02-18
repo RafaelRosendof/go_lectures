@@ -9,10 +9,10 @@ No* Arv_criaNo(No* pai, No node, Color color);
 bool ArvoreVazia(tree* arv);
 
 // Funções específicas para Red-Black Tr
-tree* arv_insereRB(tree* arv, No node);
-void corrigeInsercao(No* no);
-No* rotacaoEsquerda(tree* arv, No* no);
-No* rotacaoDireita(tree* arv, No* no);
+tree* arv_insereRB(tree* arv, No node); Feito
+void corrigeInsercao(No* no); Feito
+No* rotacaoEsquerda(tree* arv, No* no); Feito
+No* rotacaoDireita(tree* arv, No* no); Feito
 bool arv_removeRB(tree* arv, int score);
 void corrigeRemocao(No* no);
 
@@ -248,4 +248,139 @@ func AjusteIRB(arv *tree, no *Node) {
 
 	arv.raiz.cor = Black
 	//acho que foi
+}
+
+func transplant(arv *tree, u, no *Node) {
+	if u.pai == nil {
+		arv.raiz = no
+	} else if u == u.pai.esq {
+		u.pai.esq = no
+	} else {
+		u.pai.dir = no
+	}
+
+	if no != nil {
+		no.pai = u.pai
+	}
+}
+
+func Minimo(no *Node) *Node {
+	for no.esq != nil {
+		no = no.esq
+	}
+	return no
+}
+
+func Arv_removeRB(arv *tree, no *Node) bool {
+	if no == nil {
+		return false
+	}
+
+	y := no
+	yOrin := y.cor
+	var x *Node
+
+	if no.esq == nil {
+		x = no.dir
+		transplant(arv, no, no.dir)
+	} else if no.dir == nil {
+		x = no.dir
+		transplant(arv, no, no.esq)
+	} else {
+		y = Minimo(no.dir)
+		yOrin = y.cor
+		x = y.dir
+
+		if y.pai == no {
+			if x != nil {
+				x.pai = y
+			}
+		} else {
+			transplant(arv, y, y.dir)
+			y.dir = no.dir
+			if y.dir != nil {
+				y.dir.pai = y
+			}
+		}
+
+		transplant(arv, no, y)
+
+		y.esq = no.esq
+		y.esq.pai = y
+		y.cor = no.cor
+
+	}
+
+	if yOrin == Black {
+		corrigeRemocao(arv, x)
+	}
+
+	return true
+}
+
+func corrigeRemocao(arv *tree, no *Node) {
+	for no != arv.raiz && (no == nil || no.cor == Black) {
+		if no == no.pai.esq {
+			w := no.pai.dir
+			if w.cor == Red {
+				w.cor = Black
+				no.pai.cor = Black
+				RotacaoEsq(arv, no.pai)
+				w = no.pai.dir
+			}
+
+			if (w.esq == nil || w.esq.cor == Black) && (w.dir == nil || w.dir.cor == Black) {
+				w.cor = Red
+				no = no.pai
+			} else {
+				if w.dir == nil || w.dir.cor == Black {
+					w.esq.cor = Black
+					w.cor = Red
+					RotacaoDir(arv, no)
+					w = no.pai.dir
+				}
+
+				w.cor = no.pai.cor
+				no.pai.cor = Black
+				if w.dir != nil {
+					w.dir.cor = Black
+				}
+				RotacaoEsq(arv, no.pai)
+				no = arv.raiz
+			}
+		} else {
+			w := no.pai.esq
+			if w.cor == Red {
+				w.cor = Black
+				no.pai.cor = Red
+				RotacaoDir(arv, no.pai)
+				w = no.pai.esq
+			}
+
+			if (w.dir == nil || w.dir.cor == Black) && (w.esq == nil || w.esq.cor == Black) {
+				w.cor = Red
+				no = no.pai
+			} else {
+				if w.esq == nil || w.esq.cor == Black {
+					w.dir.cor = Black
+					w.cor = Red
+					RotacaoEsq(arv, w)
+					w = no.pai.esq
+				}
+
+				w.cor = no.pai.cor
+				no.pai.cor = Black
+				if w.esq != nil {
+					w.esq.cor = Black
+				}
+				RotacaoDir(arv, no.pai)
+
+				no = arv.raiz
+			}
+		}
+	}
+
+	if no != nil {
+		no.cor = Black
+	}
 }
