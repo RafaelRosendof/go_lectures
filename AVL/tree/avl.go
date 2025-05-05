@@ -1,29 +1,9 @@
 /*
 
-tree arv_criarArvVazia() feitas
-tree arv_insereAVL(tree *raiz , dado)
-tree arv_criaNo(dado) feitas
-
-tree rotacaoDireita(tree *raiz)
-tree rotacaoEsquerda(tree *raiz)
-tree rotacaoEsqDir(tree *raiz)
-tree rotacaoDirEsq(tree *raiz)
-
-int altura(tree * raiz)
-int fatorBalanceamento(tree *raiz)
-int max(int a , int b) feitas
-
 bool remove_avl(tree *raiz , dado)
-
-void arv_libera_arv in go does't need
-
-void imprime ordem , imprime pre ordem , pos ordem feitas
-
-dado retornaNode(no Node)
 
 retorna concorrenteNode(no Node)
 
-feitas
 
 */
 
@@ -80,20 +60,42 @@ func balance_factor(root *Tree) int {
 }
 
 func leftRout(root *Tree) *Tree{
+	rootAux := root.rig 
+
+	root.rig = rootTemp.left
+
+	rootAux.left = root
+
+	root.height = 1 + max(height_tree(root.left) , height_tree(root.rig))
+	rootAux.height = 1 + max(height_tree(rootTemp.left) , height_tree(rootTemp.rig))
+	return rootAux
 
 }
 
 func rightRout(root *Tree) *Tree{
+	rootAux := root.left 
+	
+	root.left = rootTemp.rig
+
+	rootAux.rig = root 
+
+	root.height = 1 + max(height_tree(root.left) , height_tree(root.rig))
+	rootAux.height = 1 + max(height_tree(rootTemp.left) , height_tree(rootTemp.rig))
+
+	return rootAux
 
 }
 
 func doubleLeft(root *Tree) *Tree{
-
+	root.rig = rightRout(root.rig)
+	return leftRout(root)
 }
 
 func doubleRight(root *Tree) *Tree{
-
+	root.left = leftRout(root.left)
+	return rightRout(root)
 }
+
 
 func Insert_avl(root *Tree , node Node) {
 
@@ -120,26 +122,74 @@ func Insert_avl(root *Tree , node Node) {
 	//check for the balance
 
 	if factor > 1 && node.score < root.left.node.score{
-
+		return rightRout(root)
 	}
 
 	if factor < -1 && node.score > root.dir.node.score{
-
+		return leftRout(root)
 	}
 
 	if factor > 1 && node.score > root.left.node.score{
-
+		return doubleRight(root)
 	}
 
 	if factor < -1 && node.score < root.dir.node.score{
-
+		return doubleLeft(root)
 	}
 
+	return root
 
 
 }
 
+func Remove_tree(root **Tree , node Node) bool{
 
+	if root == nil{
+		fmt.Println("Empty tree , nothing to remove")
+		return false
+	}
+
+	if node.score < (*root).node.score{
+
+	}
+	else if node.score > (*root).node.score{
+
+	}
+
+	else{
+
+		//case with 0 childs 
+
+
+		//case with 1 child 
+
+
+
+		//case with 2 childs 
+	}
+
+	root.height = 1 + max(height_tree((*root).left) , height_tree((*root).rig))
+	factor := balance_factor(*root)
+
+	if factor > 1 && balance_factor((*root).left) >= 0{
+		*root = rightRout(*root)
+	}
+
+	if factor > 1 && balance_factor((*root).left) < 0{
+		*root = doubleRight(*root)
+	}
+
+	if factor < -1 && balance_factor((*root).rig) <= 0{
+		*root = leftRout(*root)
+	}
+
+	if factor < -1 && balance_factor((*root).rig) > 0{
+		*root = doubleLeft(*root)
+	}
+
+	return true
+
+}
 func Search_tree(root *Tree , score int) Node{
 	if raiz == nil{
 		fmt.Println("Empty tree, nothing to serach ")
