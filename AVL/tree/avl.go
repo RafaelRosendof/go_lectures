@@ -15,9 +15,8 @@ import (
 
 type Node struct {
 	score int
-	name  string
 	year  int
-	figas bool
+	figas int // integer bool 0 true 1 false
 }
 
 type Tree struct {
@@ -147,33 +146,44 @@ func Remove_tree(root **Tree, node Node) bool {
 	}
 
 	if node.score < (*root).node.score {
-
+		return Remove_tree(&(*root).left, node)
 	} else if node.score > (*root).node.score {
-
+		return Remove_tree(&(*root).rig, node)
 	} else {
 
-		//case with 0 childs]
+		//case with 0 childs
 
 		if (*root).left == nil && (*root).rig == nil {
 			*root = nil
-			return true
 
-		} else if (*root).left == nil || (*root).rig == nil {
-			if (*root).left != nil {
-				*root = (*root).left
-			} else {
-				*root = (*root).rig
+		} else if (*root).left == nil { //case 1 child
+			*root = (*root).rig
+
+		} else if (*root).rig == nil {
+			*root = (*root).left
+
+		} else { //case with 2 childs
+
+			rootAux := *root
+
+			aux := (*root).left
+
+			for aux.rig != nil {
+				rootAux = aux
+				aux = aux.rig
 			}
-			return true
-		} else {
+			(*root).node = aux.node
 
-			rootAux := (*root).left
-			for rootAux.rig != nil {
-				rootAux = rootAux.rig
+			if rootAux == *root {
+				rootAux.left = aux.rig
+			} else {
+				rootAux.rig = aux.left
 			}
 		}
+	}
 
-		//case with 2 childs
+	if *root == nil {
+		return true
 	}
 
 	(*root).height = 1 + max(height_tree((*root).left), height_tree((*root).rig))
@@ -234,7 +244,6 @@ func height_tree(root *Tree) int {
 func Print_order(root *Tree) {
 
 	fmt.Println("Score: ", root.node.score)
-	fmt.Println("Name: ", root.node.name)
 	fmt.Println("Year: ", root.node.year)
 	fmt.Println("It's figas? : ", root.node.figas)
 
@@ -247,7 +256,6 @@ func Print_inorder(root *Tree) {
 
 	Print_inorder(root.left)
 	fmt.Println("Score: ", root.node.score)
-	fmt.Println("Name: ", root.node.name)
 	fmt.Println("Year: ", root.node.year)
 	fmt.Println("It's figas? : ", root.node.figas)
 
