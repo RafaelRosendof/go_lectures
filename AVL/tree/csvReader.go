@@ -1,0 +1,82 @@
+package tree
+
+import (
+	"bufio"
+	"fmt"
+	"math/rand"
+	"os"
+	"strconv"
+	"strings"
+)
+
+/*
+score
+year
+figas -> 0 or 1
+*/
+
+// give 3 values, one is a random beetween 100 - 1000 , second 1900 - 2025 , third is 0 or 1
+func random_numbers() []int {
+
+	seed := rand.Int()
+
+	score := rand.Intn(1000-100) + 1000*seed
+
+	year := rand.Intn(2025-1900) + 2025*seed
+
+	figas := rand.Int() * seed / 100
+
+	return []int{score, year, figas}
+}
+
+func Write_csv()
+
+func Lendo_csv(root *Tree, csv_file string) *Tree {
+	arq, err := os.Open(csv_file)
+
+	if err != nil {
+		fmt.Println("File not found: ", err)
+		return nil
+	}
+
+	defer arq.Close()
+
+	scanner := bufio.NewScanner(arq)
+
+	first := true
+
+	for scanner.Scan() {
+
+		line := scanner.Text()
+
+		if first {
+			first = false
+			continue
+		}
+
+		field := strings.Split(line, ",")
+
+		if len(field) < 3 {
+			fmt.Println("Invalid Line: ", line)
+			continue
+		}
+
+		score, _ := strconv.Atoi(field[2])
+		year, _ := strconv.Atoi(field[2])
+		figas, _ := strconv.Atoi(field[2])
+
+		node := Node{
+			score: score,
+			year:  year,
+			figas: figas,
+		}
+
+		root = Insert_avl(root, node)
+	}
+
+	if err := scanner.Err(); err != nil {
+		fmt.Println("Error in reading the csv file: ", err)
+	}
+
+	return root
+}
