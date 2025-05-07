@@ -244,6 +244,12 @@ func height_tree(root *Tree) int {
 
 func Print_order(root *Tree) {
 
+	if root == nil {
+		return
+	}
+
+	fmt.Println("My left son is : ", root.left.node.score)
+	fmt.Println("My right son is : ", root.rig.node.score) //check if the node is valid just a if
 	fmt.Println("Score: ", root.node.score)
 	fmt.Println("Year: ", root.node.year)
 	fmt.Println("It's figas? : ", root.node.figas)

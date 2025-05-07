@@ -16,4 +16,5 @@ func main() {
 
 	tree.Print_order(root)
 
+	root = nil
 }
