@@ -29,9 +29,27 @@ func random_numbers() []int {
 	return []int{score, year, figas}
 }
 
-func Write_csv()
+func Write_csv(csv_in string) {
+	arq, err := os.Create(csv_in)
 
-func Lendo_csv(root *Tree, csv_file string) *Tree {
+	if err != nil {
+		fmt.Println("Error creating file: ", err)
+		return
+	}
+
+	defer arq.Close()
+
+	writer := bufio.NewWriter(arq)
+	writer.WriteString("score,year,figas\n")
+	for i := 0; i < 1_000_000; i++ {
+		numbers := random_numbers()
+		writer.WriteString(fmt.Sprintf("%d,%d,%d\n", numbers[0], numbers[1], numbers[2]))
+	}
+	writer.Flush()
+	fmt.Println("File created successfully")
+}
+
+func Read_csv(root *Tree, csv_file string) *Tree {
 	arq, err := os.Open(csv_file)
 
 	if err != nil {
