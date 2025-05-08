@@ -25,5 +25,28 @@ func main() {
 		fmt.Println("The tree is not balanced")
 	}
 
+	fmt.Println("Choosing random numbers to remove -> ")
+
+	remove_numbers := tree.Remove_nodes(10, "data.csv")
+
+	fmt.Println("Removing : ", remove_numbers)
+
+	for i := 0; i < len(remove_numbers); i++ {
+		tree.Remove_tree(&(root), remove_numbers[i])
+	}
+
+	fmt.Println("Printing in orderrer: ")
+
+	tree.Print_order(root)
+
+	fmt.Println("Checking if the tree is balanced: ")
+	balanced2 := tree.IsBalanced(root)
+
+	if balanced2 {
+		fmt.Println("The tree is balanced")
+	} else {
+		fmt.Println("The tree is not balanced")
+	}
+
 	root = nil
 }

@@ -41,7 +41,7 @@ func Write_csv(csv_in string) {
 
 	writer := bufio.NewWriter(arq)
 	writer.WriteString("score,year,figas\n")
-	for i := 0; i < 1_000; i++ {
+	for i := 0; i < 20; i++ {
 		numbers := random_numbers()
 		writer.WriteString(fmt.Sprintf("%d,%d,%d\n", numbers[0], numbers[1], numbers[2]))
 	}

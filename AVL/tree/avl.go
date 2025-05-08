@@ -139,17 +139,22 @@ func Insert_avl(root *Tree, node Node) *Tree {
 
 }
 
-func Remove_tree(root **Tree, node Node) bool {
+func Remove_tree(root **Tree, score int) {
 
 	if root == nil {
 		fmt.Println("Empty tree , nothing to remove")
-		return false
+		return
 	}
 
-	if node.score < (*root).node.score {
-		return Remove_tree(&(*root).left, node)
-	} else if node.score > (*root).node.score {
-		return Remove_tree(&(*root).rig, node)
+	if *root == nil {
+		fmt.Println("Node not found")
+		return
+	}
+
+	if score < (*root).node.score {
+		Remove_tree(&(*root).left, score)
+	} else if score > (*root).node.score {
+		Remove_tree(&(*root).rig, score)
 	} else {
 
 		//case with 0 childs
@@ -184,7 +189,7 @@ func Remove_tree(root **Tree, node Node) bool {
 	}
 
 	if *root == nil {
-		return true
+		return
 	}
 
 	(*root).height = 1 + max(height_tree((*root).left), height_tree((*root).rig))
@@ -206,9 +211,9 @@ func Remove_tree(root **Tree, node Node) bool {
 		*root = doubleLeft(*root)
 	}
 
-	return true
-
+	return
 }
+
 func Search_tree(root *Tree, score int) Node {
 	if root == nil {
 		fmt.Println("Empty tree, nothing to serach ")
