@@ -16,5 +16,14 @@ func main() {
 
 	tree.Print_order(root)
 
+	fmt.Println("Checking if the tree is balanced: ")
+	balanced := tree.IsBalanced(root)
+
+	if balanced {
+		fmt.Println("The tree is balanced")
+	} else {
+		fmt.Println("The tree is not balanced")
+	}
+
 	root = nil
 }

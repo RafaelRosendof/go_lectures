@@ -242,14 +242,46 @@ func height_tree(root *Tree) int {
 	}
 }
 
+func abs(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
+}
+
+func IsBalanced(root *Tree) bool {
+	if root == nil {
+		return true
+	}
+
+	lh := height_tree(root.left)
+	rh := height_tree(root.rig)
+
+	if abs(lh-rh) > 1 {
+		fmt.Printf("Node %d is unbalanced. Left height: %d, Right height: %d\n", root.node.score, lh, rh)
+		return false
+	}
+
+	return IsBalanced(root.left) && IsBalanced(root.rig)
+}
+
 func Print_order(root *Tree) {
 
 	if root == nil {
 		return
 	}
 
-	fmt.Println("My left son is : ", root.left.node.score)
-	fmt.Println("My right son is : ", root.rig.node.score) //check if the node is valid just a if
+	if root.left != nil {
+		fmt.Println("My left son is : ", root.left.node.score)
+	} else {
+		fmt.Println("I don't have a left son")
+	}
+
+	if root.rig != nil {
+		fmt.Println("My right son is : ", root.rig.node.score)
+	} else {
+		fmt.Println("I don't have a right son")
+	}
 	fmt.Println("Score: ", root.node.score)
 	fmt.Println("Year: ", root.node.year)
 	fmt.Println("It's figas? : ", root.node.figas)
