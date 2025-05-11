@@ -15,9 +15,9 @@ import (
 )
 
 type Node struct {
-	score int
-	year  int
-	figas int // integer bool 0 true 1 false
+	Score int
+	Year  int
+	Figas int // integer bool 0 true 1 false
 }
 
 type Tree struct {
@@ -102,13 +102,13 @@ func Insert_avl(root *Tree, node Node) *Tree {
 
 	}
 
-	if node.score < root.node.score {
+	if node.Score < root.node.Score {
 		root.left = Insert_avl(root.left, node)
 
-	} else if node.score > root.node.score {
+	} else if node.Score > root.node.Score {
 		root.rig = Insert_avl(root.rig, node)
 	} else {
-		fmt.Println("Node already in the tree")
+		//fmt.Println("Node already in the tree")
 		return root
 	}
 
@@ -119,19 +119,19 @@ func Insert_avl(root *Tree, node Node) *Tree {
 
 	//check for the balance
 
-	if factor > 1 && node.score < root.left.node.score {
+	if factor > 1 && node.Score < root.left.node.Score {
 		return rightRout(root)
 	}
 
-	if factor < -1 && node.score > root.rig.node.score {
+	if factor < -1 && node.Score > root.rig.node.Score {
 		return leftRout(root)
 	}
 
-	if factor > 1 && node.score > root.left.node.score {
+	if factor > 1 && node.Score > root.left.node.Score {
 		return doubleRight(root)
 	}
 
-	if factor < -1 && node.score < root.rig.node.score {
+	if factor < -1 && node.Score < root.rig.node.Score {
 		return doubleLeft(root)
 	}
 
@@ -139,7 +139,7 @@ func Insert_avl(root *Tree, node Node) *Tree {
 
 }
 
-func Remove_tree(root **Tree, score int) {
+func Remove_tree(root **Tree, Score int) {
 
 	if root == nil {
 		fmt.Println("Empty tree , nothing to remove")
@@ -151,10 +151,10 @@ func Remove_tree(root **Tree, score int) {
 		return
 	}
 
-	if score < (*root).node.score {
-		Remove_tree(&(*root).left, score)
-	} else if score > (*root).node.score {
-		Remove_tree(&(*root).rig, score)
+	if Score < (*root).node.Score {
+		Remove_tree(&(*root).left, Score)
+	} else if Score > (*root).node.Score {
+		Remove_tree(&(*root).rig, Score)
 	} else {
 
 		//case with 0 childs
@@ -214,17 +214,18 @@ func Remove_tree(root **Tree, score int) {
 	return
 }
 
-func Search_tree(root *Tree, score int) Node {
+func Search_tree(root *Tree, Score int) Node {
 	if root == nil {
 		fmt.Println("Empty tree, nothing to serach ")
+		return Node{}
 	}
 
-	if score == root.node.score {
+	if Score == root.node.Score {
 		return root.node
-	} else if root.node.score < score {
-		return Search_tree(root.left, score)
-	} else if root.node.score > score {
-		return Search_tree(root.rig, score)
+	} else if root.node.Score > Score {
+		return Search_tree(root.left, Score)
+	} else if root.node.Score < Score {
+		return Search_tree(root.rig, Score)
 	}
 
 	fmt.Println("The node with this value is not in the tree")
@@ -263,7 +264,7 @@ func IsBalanced(root *Tree) bool {
 	rh := height_tree(root.rig)
 
 	if abs(lh-rh) > 1 {
-		fmt.Printf("Node %d is unbalanced. Left height: %d, Right height: %d\n", root.node.score, lh, rh)
+		fmt.Printf("Node %d is unbalanced. Left height: %d, Right height: %d\n", root.node.Score, lh, rh)
 		return false
 	}
 
@@ -277,19 +278,19 @@ func Print_order(root *Tree) {
 	}
 
 	if root.left != nil {
-		fmt.Println("My left son is : ", root.left.node.score)
+		fmt.Println("My left son is : ", root.left.node.Score)
 	} else {
 		fmt.Println("I don't have a left son")
 	}
 
 	if root.rig != nil {
-		fmt.Println("My right son is : ", root.rig.node.score)
+		fmt.Println("My right son is : ", root.rig.node.Score)
 	} else {
 		fmt.Println("I don't have a right son")
 	}
-	fmt.Println("Score: ", root.node.score)
-	fmt.Println("Year: ", root.node.year)
-	fmt.Println("It's figas? : ", root.node.figas)
+	fmt.Println("Score: ", root.node.Score)
+	fmt.Println("Year: ", root.node.Year)
+	fmt.Println("It's Figas? : ", root.node.Figas)
 
 	Print_order(root.left)
 	Print_order(root.rig)
@@ -299,9 +300,9 @@ func Print_order(root *Tree) {
 func Print_inorder(root *Tree) {
 
 	Print_inorder(root.left)
-	fmt.Println("Score: ", root.node.score)
-	fmt.Println("Year: ", root.node.year)
-	fmt.Println("It's figas? : ", root.node.figas)
+	fmt.Println("Score: ", root.node.Score)
+	fmt.Println("Year: ", root.node.Year)
+	fmt.Println("It's Figas? : ", root.node.Figas)
 
 	Print_inorder(root.rig)
 }

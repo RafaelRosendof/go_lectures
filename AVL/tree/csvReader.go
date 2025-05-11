@@ -9,24 +9,18 @@ import (
 	"strings"
 )
 
-/*
-score
-year
-figas -> 0 or 1
-*/
-
 // give 3 values, one is a random beetween 100 - 1000 , second 1900 - 2025 , third is 0 or 1
 func random_numbers() []int {
 
 	seed := rand.Intn(100-1) + 1
 
-	score := rand.Intn(1000-100) + 1000
+	Score := rand.Intn(7000-100) + 7000
 
-	year := rand.Intn(2025-1900) + 1900
+	Year := rand.Intn(2025-1900) + 1900
 
-	figas := rand.Intn(10-5) + 5*seed
+	Figas := rand.Intn(10-5) + 5*seed
 
-	return []int{score, year, figas}
+	return []int{Score, Year, Figas}
 }
 
 func Write_csv(csv_in string) {
@@ -40,8 +34,8 @@ func Write_csv(csv_in string) {
 	defer arq.Close()
 
 	writer := bufio.NewWriter(arq)
-	writer.WriteString("score,year,figas\n")
-	for i := 0; i < 20; i++ {
+	writer.WriteString("Score,Year,Figas\n")
+	for i := 0; i < 10_000; i++ {
 		numbers := random_numbers()
 		writer.WriteString(fmt.Sprintf("%d,%d,%d\n", numbers[0], numbers[1], numbers[2]))
 	}
@@ -79,14 +73,14 @@ func Read_csv(root *Tree, csv_file string) *Tree {
 			continue
 		}
 
-		score, _ := strconv.Atoi(field[0])
-		year, _ := strconv.Atoi(field[1])
-		figas, _ := strconv.Atoi(field[2])
+		Score, _ := strconv.Atoi(field[0])
+		Year, _ := strconv.Atoi(field[1])
+		Figas, _ := strconv.Atoi(field[2])
 
 		node := Node{
-			score: score,
-			year:  year,
-			figas: figas,
+			Score: Score,
+			Year:  Year,
+			Figas: Figas,
 		}
 
 		root = Insert_avl(root, node)

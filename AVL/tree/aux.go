@@ -14,6 +14,10 @@ func random_line() int {
 	return rand.Intn(1000-100) + 1000
 }
 
+func Square(x int) int {
+	return x * x
+}
+
 func Remove_nodes(num_nodes int, csv_in string) []int {
 	rand.Seed(time.Now().UnixNano())
 

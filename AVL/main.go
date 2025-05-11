@@ -27,7 +27,7 @@ func main() {
 
 	fmt.Println("Choosing random numbers to remove -> ")
 
-	remove_numbers := tree.Remove_nodes(10, "data.csv")
+	remove_numbers := tree.Remove_nodes(5_000, "data.csv")
 
 	fmt.Println("Removing : ", remove_numbers)
 
