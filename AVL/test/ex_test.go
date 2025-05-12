@@ -48,7 +48,7 @@ func TestRoot(t *testing.T) {
 
 }
 
-func TestInsertAndFind(t *testing.T) {
+func TestInsertAndFindAndDelete(t *testing.T) {
 
 	//get the data, insert in the tree and try to find the middle
 
@@ -99,6 +99,14 @@ func TestInsertAndFind(t *testing.T) {
 	t.Run("Not find the score", func(t *testing.T) {
 		act := tree.Search_tree(root, wrong_score)
 		assert.NotEqual(t, act, wrong_score, "They should not be equal ")
+	})
+
+	t.Run("Find and delete the node", func(t *testing.T) {
+		act := tree.Search_tree(root, 3)
+		tree.Remove_tree(&root, 3)
+		act2 := tree.Search_tree(root, 3)
+
+		assert.NotEqual(t, act, act2, "They should not be equal, the node should be removed ")
 	})
 }
 
