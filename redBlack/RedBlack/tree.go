@@ -4,22 +4,22 @@ import "fmt"
 
 /*
 // Funções básicas
-tree* Arv_criaArv(); Feito
+Tree* Arv_criaArv(); Feito
 No* Arv_criaNo(No* pai, No node, Color color);
-bool ArvoreVazia(tree* arv);
+bool ArvoreVazia(Tree* arv);
 
 // Funções específicas para Red-Black Tr
-tree* arv_insereRB(tree* arv, No node); Feito
+Tree* arv_insereRB(Tree* arv, No node); Feito
 void corrigeInsercao(No* no); Feito
-No* rotacaoEsquerda(tree* arv, No* no); Feito
-No* rotacaoDireita(tree* arv, No* no); Feito
-bool arv_removeRB(tree* arv, int score);
+No* rotacaoEsquerda(Tree* arv, No* no); Feito
+No* rotacaoDireita(Tree* arv, No* no); Feito
+bool arv_removeRB(Tree* arv, int score);
 void corrigeRemocao(No* no);
 
 void ImprimeOrdem(No* raiz); Feito
 void ImprimePreOrdem(No* raiz); Feito
 No* Busca_no(No* raiz, int score);  feito
-int Altura_tree(No* raiz); feito
+int Altura_Tree(No* raiz); feito
 
 ver uma lib de go para imprimir em formato de desenho
 */
@@ -38,17 +38,17 @@ type Node struct {
 	pai   *Node
 }
 
-type tree struct {
+type Tree struct {
 	raiz *Node
 }
 
-func Altura_tree(raiz *Node) int {
+func Altura_Tree(raiz *Node) int {
 	if raiz == nil {
 		return 0
 	}
 
-	alt1 := Altura_tree(raiz.esq) //checar isso
-	alt2 := Altura_tree(raiz.esq) // isso tbm
+	alt1 := Altura_Tree(raiz.esq) //checar isso
+	alt2 := Altura_Tree(raiz.esq) // isso tbm
 
 	if alt1 > alt2 {
 		return alt1 + 1
@@ -66,8 +66,8 @@ func Arv_criaNo(score int, pai *Node) *Node {
 	}
 }
 
-func ArvoreVazia(tree *tree) bool {
-	if tree.raiz == nil {
+func ArvoreVazia(Tree *Tree) bool {
+	if Tree.raiz == nil {
 		return true
 	}
 	return false
@@ -95,8 +95,8 @@ func Busca_no(raiz *Node, score int) *Node {
 	return nil
 }
 
-func Arv_criaArv() *tree {
-	return &tree{}
+func Arv_criaArv() *Tree {
+	return &Tree{}
 }
 
 func PrintaNode(no *Node) {
@@ -124,7 +124,7 @@ func PrintaPreOrdem(raiz *Node) {
 	PrintaPreOrdem(raiz.dir)
 }
 
-func RotacaoEsq(arv *tree, no *Node) *Node {
+func RotacaoEsq(arv *Tree, no *Node) *Node {
 	filhoDir := no.dir
 	no.dir = filhoDir.esq
 	if filhoDir.esq != nil {
@@ -143,7 +143,7 @@ func RotacaoEsq(arv *tree, no *Node) *Node {
 	return filhoDir
 }
 
-func RotacaoDir(arv *tree, no *Node) *Node {
+func RotacaoDir(arv *Tree, no *Node) *Node {
 
 	filhoEsq := no.esq
 	no.esq = filhoEsq.dir
@@ -166,7 +166,7 @@ func RotacaoDir(arv *tree, no *Node) *Node {
 
 }
 
-func Arv_insereRB(arv *tree, no *Node) {
+func Arv_insereRB(arv *Tree, no *Node) {
 	if arv.raiz == nil {
 		no.cor = Black
 		arv.raiz = no
@@ -201,7 +201,7 @@ func Arv_insereRB(arv *tree, no *Node) {
 
 }
 
-func AjusteIRB(arv *tree, no *Node) {
+func AjusteIRB(arv *Tree, no *Node) {
 	for no != arv.raiz && no.pai != nil && no.pai.cor == Red {
 		if no.pai == no.pai.pai.esq { //pai é filho esquerdo do avo
 			y := no.pai.pai.dir //Tio é filho direito do avo
@@ -250,7 +250,7 @@ func AjusteIRB(arv *tree, no *Node) {
 	//acho que foi
 }
 
-func transplant(arv *tree, u, no *Node) {
+func transplant(arv *Tree, u, no *Node) {
 	if u.pai == nil {
 		arv.raiz = no
 	} else if u == u.pai.esq {
@@ -271,7 +271,7 @@ func Minimo(no *Node) *Node {
 	return no
 }
 
-func Arv_removeRB(arv *tree, no *Node) bool {
+func Arv_removeRB(arv *Tree, no *Node) bool {
 	if no == nil {
 		return false
 	}
@@ -318,7 +318,7 @@ func Arv_removeRB(arv *tree, no *Node) bool {
 	return true
 }
 
-func corrigeRemocao(arv *tree, no *Node) {
+func corrigeRemocao(arv *Tree, no *Node) {
 	for no != arv.raiz && (no == nil || no.cor == Black) {
 		if no == no.pai.esq {
 			w := no.pai.dir
