@@ -1,4 +1,4 @@
-package redblack
+package tree
 
 import "fmt"
 
@@ -95,6 +95,44 @@ func Busca_no(raiz *Node, score int) *Node {
 	return nil
 }
 
+func Busca_no_raiz(raiz *Tree, score int) bool {
+	if raiz == nil || raiz.raiz == nil {
+		return false
+	}
+
+	if raiz.raiz.score == score {
+		return true
+
+	} else if raiz.raiz.score < score {
+		return Busca_no_raiz(&Tree{raiz.raiz.dir}, score)
+	} else {
+		return Busca_no_raiz(&Tree{raiz.raiz.esq}, score)
+	}
+}
+
+/*
+
+func Busca_no(raiz *Tree, score int) *Node {
+	if raiz == nil || raiz.raiz == nil {
+		return nil
+	}
+
+	current := raiz.raiz
+
+	for current != nil {
+		if current.score == score {
+			return current
+		} else if current.score < score {
+			current = current.dir
+		} else {
+			current = current.esq
+		}
+	}
+
+	return nil
+}
+*/
+
 func Arv_criaArv() *Tree {
 	return &Tree{}
 }
@@ -106,22 +144,33 @@ func PrintaNode(no *Node) {
 	fmt.Println("Score: ", no.score, " Cor: ", no.cor)
 }
 
-func PrintaInOrdem(raiz *Node) {
-	if raiz == nil {
+func PrintaInOrdemNode(no *Node) {
+	if no == nil {
 		return
+
 	}
-	PrintaInOrdem(raiz.esq)
-	PrintaNode(raiz)
-	PrintaInOrdem(raiz.dir)
+
+	PrintaInOrdemNode(no.esq)
+	PrintaNode(no)
+	PrintaInOrdemNode(no.dir)
 }
 
-func PrintaPreOrdem(raiz *Node) {
-	if raiz == nil {
+func PrintaInOrdem(raiz *Tree) {
+	if raiz == nil || raiz.raiz == nil {
 		return
 	}
-	PrintaNode(raiz)
-	PrintaPreOrdem(raiz.esq)
-	PrintaPreOrdem(raiz.dir)
+	PrintaInOrdemNode(raiz.raiz.esq)
+	PrintaNode(raiz.raiz)
+	PrintaInOrdemNode(raiz.raiz.dir)
+}
+
+func PrintaPreOrdem(raiz *Tree) {
+	if raiz == nil || raiz.raiz == nil {
+		return
+	}
+	PrintaNode(raiz.raiz)
+	PrintaInOrdemNode(raiz.raiz.esq)
+	PrintaInOrdemNode(raiz.raiz.dir)
 }
 
 func RotacaoEsq(arv *Tree, no *Node) *Node {
@@ -271,6 +320,7 @@ func Minimo(no *Node) *Node {
 	return no
 }
 
+/*
 func Arv_removeRB(arv *Tree, no *Node) bool {
 	if no == nil {
 		return false
@@ -309,6 +359,67 @@ func Arv_removeRB(arv *Tree, no *Node) bool {
 		y.esq.pai = y
 		y.cor = no.cor
 
+	}
+
+	if yOrin == Black {
+		corrigeRemocao(arv, x)
+	}
+
+	return true
+}
+
+*/
+
+func Arv_removeRB(arv *Tree, score int) bool {
+	if arv.raiz == nil {
+		return false
+	}
+
+	// verify if the score exists
+
+	if !Busca_no_raiz(arv, score) {
+		return false
+	}
+
+	no := Busca_no(arv.raiz, score)
+	if no == nil {
+		return false
+	}
+
+	y := no
+	yOrin := y.cor
+
+	var x *Node
+
+	if no.esq == nil {
+		x = no.dir
+		transplant(arv, no, no.dir)
+	} else if no.dir == nil {
+		x = no.dir
+		transplant(arv, no, no.esq)
+	} else {
+		y = Minimo(no.dir)
+		yOrin = y.cor
+		x = y.dir
+
+		if y.pai == no {
+			if x != nil {
+				x.pai = y
+			}
+
+		} else {
+			transplant(arv, y, y.dir)
+			y.dir = no.dir
+			if y.dir != nil {
+				y.dir.pai = y
+			}
+		}
+
+		transplant(arv, no, y)
+
+		y.esq = no.esq
+		y.esq.pai = y
+		y.cor = no.cor
 	}
 
 	if yOrin == Black {
