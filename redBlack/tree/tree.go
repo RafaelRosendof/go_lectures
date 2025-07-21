@@ -44,11 +44,11 @@ type Tree struct {
 
 func Altura_Tree(raiz *Node) int {
 	if raiz == nil {
-		return 0
+		return -1
 	}
 
 	alt1 := Altura_Tree(raiz.esq) //checar isso
-	alt2 := Altura_Tree(raiz.esq) // isso tbm
+	alt2 := Altura_Tree(raiz.dir) // isso tbm
 
 	if alt1 > alt2 {
 		return alt1 + 1
@@ -229,8 +229,10 @@ func Arv_insereRB(arv *Tree, no *Node) {
 		y = x
 		if no.score < x.score {
 			x = x.esq
-		} else {
+		} else if no.score > x.score {
 			x = x.dir
+		} else {
+			return
 		}
 	}
 
@@ -311,6 +313,8 @@ func transplant(arv *Tree, u, no *Node) {
 	if no != nil {
 		no.pai = u.pai
 	}
+
+	//no.pai = u.pai
 }
 
 func Minimo(no *Node) *Node {
@@ -321,136 +325,47 @@ func Minimo(no *Node) *Node {
 }
 
 /*
-func Arv_removeRB(arv *Tree, no *Node) bool {
-	if no == nil {
-		return false
-	}
-
-	y := no
-	yOrin := y.cor
-	var x *Node
-
-	if no.esq == nil {
-		x = no.dir
-		transplant(arv, no, no.dir)
-	} else if no.dir == nil {
-		x = no.dir
-		transplant(arv, no, no.esq)
-	} else {
-		y = Minimo(no.dir)
-		yOrin = y.cor
-		x = y.dir
-
-		if y.pai == no {
-			if x != nil {
-				x.pai = y
-			}
-		} else {
-			transplant(arv, y, y.dir)
-			y.dir = no.dir
-			if y.dir != nil {
-				y.dir.pai = y
-			}
-		}
-
-		transplant(arv, no, y)
-
-		y.esq = no.esq
-		y.esq.pai = y
-		y.cor = no.cor
-
-	}
-
-	if yOrin == Black {
-		corrigeRemocao(arv, x)
-	}
-
-	return true
-}
-
-*/
-
-func Arv_removeRB(arv *Tree, score int) bool {
-	if arv.raiz == nil {
-		return false
-	}
-
-	// verify if the score exists
-
-	if !Busca_no_raiz(arv, score) {
-		return false
-	}
-
-	no := Busca_no(arv.raiz, score)
-	if no == nil {
-		return false
-	}
-
-	y := no
-	yOrin := y.cor
-
-	var x *Node
-
-	if no.esq == nil {
-		x = no.dir
-		transplant(arv, no, no.dir)
-	} else if no.dir == nil {
-		x = no.dir
-		transplant(arv, no, no.esq)
-	} else {
-		y = Minimo(no.dir)
-		yOrin = y.cor
-		x = y.dir
-
-		if y.pai == no {
-			if x != nil {
-				x.pai = y
-			}
-
-		} else {
-			transplant(arv, y, y.dir)
-			y.dir = no.dir
-			if y.dir != nil {
-				y.dir.pai = y
-			}
-		}
-
-		transplant(arv, no, y)
-
-		y.esq = no.esq
-		y.esq.pai = y
-		y.cor = no.cor
-	}
-
-	if yOrin == Black {
-		corrigeRemocao(arv, x)
-	}
-
-	return true
-}
-
 func corrigeRemocao(arv *Tree, no *Node) {
 	for no != arv.raiz && (no == nil || no.cor == Black) {
+
+		if no == nil {
+			no = arv.raiz
+		}
+
+		if no.pai == nil {
+			return
+		}
+
 		if no == no.pai.esq {
 			w := no.pai.dir
-			if w.cor == Red {
+
+			if w == nil {
+				break
+			}
+
+			if w.cor == Red { //case 1 // error of segmentation fault here
 				w.cor = Black
-				no.pai.cor = Black
+				no.pai.cor = Red // it was black here
 				RotacaoEsq(arv, no.pai)
 				w = no.pai.dir
 			}
 
+			//case 2
 			if (w.esq == nil || w.esq.cor == Black) && (w.dir == nil || w.dir.cor == Black) {
 				w.cor = Red
 				no = no.pai
 			} else {
+				// case 3
 				if w.dir == nil || w.dir.cor == Black {
-					w.esq.cor = Black
+					if w.esq != nil {
+						w.esq.cor = Black
+					}
 					w.cor = Red
-					RotacaoDir(arv, no)
+					RotacaoDir(arv, w)
 					w = no.pai.dir
 				}
 
+				// case 4
 				w.cor = no.pai.cor
 				no.pai.cor = Black
 				if w.dir != nil {
@@ -461,24 +376,34 @@ func corrigeRemocao(arv *Tree, no *Node) {
 			}
 		} else {
 			w := no.pai.esq
-			if w.cor == Red {
+
+			if w == nil {
+				break
+			}
+
+			if w.cor == Red { //case 1
+
 				w.cor = Black
 				no.pai.cor = Red
 				RotacaoDir(arv, no.pai)
 				w = no.pai.esq
 			}
-
-			if (w.dir == nil || w.dir.cor == Black) && (w.esq == nil || w.esq.cor == Black) {
+			//case 2
+			if (w.esq == nil || w.esq.cor == Black) && (w.dir == nil || w.dir.cor == Black) { //segfault here
+				//if w.dir.cor == Black && w.esq.cor == Black {
 				w.cor = Red
 				no = no.pai
 			} else {
+				//case 3
 				if w.esq == nil || w.esq.cor == Black {
-					w.dir.cor = Black
+					if w.dir != nil {
+						w.dir.cor = Black
+					}
 					w.cor = Red
 					RotacaoEsq(arv, w)
 					w = no.pai.esq
 				}
-
+				// case 4
 				w.cor = no.pai.cor
 				no.pai.cor = Black
 				if w.esq != nil {
@@ -494,4 +419,200 @@ func corrigeRemocao(arv *Tree, no *Node) {
 	if no != nil {
 		no.cor = Black
 	}
+}
+*/
+
+func Arv_removeRB(arv *Tree, score int) bool {
+	z := Busca_no(arv.raiz, score)
+	if z == nil {
+		return false // Node not found
+	}
+
+	var x, parentOfX *Node
+	y := z
+	yOriginalColor := y.cor
+
+	if z.esq == nil {
+		x = z.dir
+		transplant(arv, z, x)
+		parentOfX = z.pai
+	} else if z.dir == nil {
+		x = z.esq
+		transplant(arv, z, x)
+		parentOfX = z.pai
+	} else {
+		y = Minimo(z.dir)
+		yOriginalColor = y.cor
+		x = y.dir
+		if y.pai == z {
+			parentOfX = y
+		} else {
+			parentOfX = y.pai
+			transplant(arv, y, x)
+			y.dir = z.dir
+			y.dir.pai = y
+		}
+		transplant(arv, z, y)
+		y.esq = z.esq
+		y.esq.pai = y
+		y.cor = z.cor
+	}
+
+	if yOriginalColor == Black {
+		corrigeRemocao(arv, x, parentOfX)
+	}
+
+	return true
+}
+
+func corrigeRemocao(arv *Tree, no, parent *Node) {
+	for no != arv.raiz && (no == nil || no.cor == Black) {
+		if parent == nil {
+			break // Should not happen if no is not root
+		}
+
+		// Case: 'no' is a left child (or the position of a nil left child)
+		if no == parent.esq {
+			w := parent.dir // Sibling
+			if w == nil {
+				break // Should not happen in a valid RB tree
+			}
+
+			if w.cor == Red { // Case 1
+				w.cor = Black
+				parent.cor = Red
+				RotacaoEsq(arv, parent)
+				w = parent.dir
+			}
+
+			// Case 2
+			if (w.esq == nil || w.esq.cor == Black) && (w.dir == nil || w.dir.cor == Black) {
+				w.cor = Red
+				no = parent
+				parent = no.pai
+			} else {
+				// Case 3
+				if w.dir == nil || w.dir.cor == Black {
+					if w.esq != nil {
+						w.esq.cor = Black
+					}
+					w.cor = Red
+					RotacaoDir(arv, w)
+					w = parent.dir
+				}
+				// Case 4
+				w.cor = parent.cor
+				parent.cor = Black
+				if w.dir != nil {
+					w.dir.cor = Black
+				}
+				RotacaoEsq(arv, parent)
+				no = arv.raiz // Problem solved, exit loop
+			}
+		} else { // Case: 'no' is a right child
+			w := parent.esq // Sibling
+			if w == nil {
+				break
+			}
+
+			if w.cor == Red { // Case 1
+				w.cor = Black
+				parent.cor = Red
+				RotacaoDir(arv, parent)
+				w = parent.esq
+			}
+
+			// Case 2
+			if (w.esq == nil || w.esq.cor == Black) && (w.dir == nil || w.dir.cor == Black) {
+				w.cor = Red
+				no = parent
+				parent = no.pai
+			} else {
+				// Case 3
+				if w.esq == nil || w.esq.cor == Black {
+					if w.dir != nil {
+						w.dir.cor = Black
+					}
+					w.cor = Red
+					RotacaoEsq(arv, w)
+					w = parent.esq
+				}
+				// Case 4
+				w.cor = parent.cor
+				parent.cor = Black
+				if w.esq != nil {
+					w.esq.cor = Black
+				}
+				RotacaoDir(arv, parent)
+				no = arv.raiz
+			}
+		}
+	}
+	if no != nil {
+		no.cor = Black
+	}
+}
+
+// Testing function to check if the tree is balanced, and following the Red-Black properties
+func IsValid(arv *Tree) bool {
+	if arv == nil || arv.raiz == nil {
+		return true
+	}
+	if arv.raiz.cor != Black {
+		fmt.Println("Validation Error: Root is not black.")
+		return false
+	}
+	if !isBST(arv.raiz, nil, nil) {
+		return false
+	}
+	_, isValid := isValidRBTree(arv.raiz)
+	if !isValid {
+		return false
+	}
+	return true
+}
+
+// TODO
+func isValidRBTree(node *Node) (blackHeight int, isValid bool) {
+
+	if node == nil {
+		return 1, true
+	}
+	if node.cor == Red {
+		if (node.esq != nil && node.esq.cor == Red) || (node.dir != nil && node.dir.cor == Red) {
+			fmt.Printf("Validation Error: Red node %d has a red child.\n", node.score)
+			return 0, false
+		}
+	}
+	leftBlackHeight, isLeftValid := isValidRBTree(node.esq)
+	if !isLeftValid {
+		return 0, false
+	}
+	rightBlackHeight, isRightValid := isValidRBTree(node.dir)
+	if !isRightValid {
+		return 0, false
+	}
+	if leftBlackHeight != rightBlackHeight {
+		fmt.Printf("Validation Error: Black height mismatch at node %d. (Left: %d, Right: %d)\n", node.score, leftBlackHeight, rightBlackHeight)
+		return 0, false
+	}
+	if node.cor == Black {
+		leftBlackHeight++
+	}
+	return leftBlackHeight, true
+}
+
+func isBST(node *Node, minNode *Node, maxNode *Node) bool {
+	if node == nil {
+		return true
+	}
+	if maxNode != nil && node.score >= maxNode.score {
+		fmt.Printf("BST Violation: Node %d is not less than max %d\n", node.score, maxNode.score)
+		return false
+	}
+	if minNode != nil && node.score <= minNode.score {
+		fmt.Printf("BST Violation: Node %d is not greater than min %d\n", node.score, minNode.score)
+		return false
+	}
+	return isBST(node.esq, minNode, node) && isBST(node.dir, node, maxNode)
 }

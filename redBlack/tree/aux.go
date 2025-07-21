@@ -16,7 +16,7 @@ func RandomNumbers() []int {
 	return []int{score}
 }
 
-func Write_csv(csv_in string) {
+func Write_csv(csv_in string, lines int) {
 	arq, err := os.Create(csv_in)
 
 	if err != nil {
@@ -28,7 +28,7 @@ func Write_csv(csv_in string) {
 	writer := bufio.NewWriter(arq)
 	writer.WriteString("Score\n")
 
-	for i := 0; i < 1_000; i++ {
+	for i := 0; i < lines; i++ {
 		numbers := RandomNumbers()
 		writer.WriteString(fmt.Sprintf("%d\n", numbers[0]))
 	}
