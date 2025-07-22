@@ -9,7 +9,7 @@ import (
 
 func main() {
 
-	runMain(10)
+	runMain(20)
 }
 
 func runMain(number_times int) {
