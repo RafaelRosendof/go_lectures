@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"math"
 	"math_test/dif"
+	"math_test/integral"
+
+	"gonum.org/v1/gonum/stat/distuv"
 )
 
 func Derivate_examples() {
@@ -72,10 +75,50 @@ func Derivate_examples() {
 
 }
 
-func integration_example() {
+// implementing the wrapper with tests here
+func Integration_example() {
+	points := 1_000_000
+	//f1 := func(x float64) float64 {
+	//	term1 := math.Cos(x * math.Pi / 2)
+	//	term2 := math.Log10(x*123*x) + 10
+	//	term3 := math.Pow(x, 2) / math.Sqrt(x*x*x*math.Pi/3)
+	//	term4 := x * 100
+	//
+	//	return term1 + term2 - term3 + term4 - term3
+	//	//return math.Cos(x*math.Pi/2) + math.Log10(x*123*x) - math.Pow(x, math.Log2(x*x*x))/math.Sqrt(math.Tan(x*x*x*math.Pi/3))
+	//}
+
+	f2 := func(x float64) float64 {
+
+		//d := distuv.Poisson{Lambda: 100}
+		d := distuv.Exponential{Rate: 10, Src: nil}
+		return float64(d.Prob(x))
+	}
+
+	x_axis := make([]float64, points)
+	y_axis := make([]float64, points)
+
+	for i := 0; i < int(len(x_axis)); i++ {
+		x_axis[i] = float64((0.1 / float64(points-1) * float64(i)) + 1e-7)
+		y_axis[i] = f2(float64(x_axis[i]))
+	}
+
+	fmt.Println(x_axis[0], x_axis[1])
+
+	fmt.Println("Starting the tests on the integration field")
+
+	res1 := integral.Test_simple_integral(x_axis, y_axis)
+
+	fmt.Printf("\n\nReturning the sum bellow the curve with the trapezoidal method %.15f\n", res1)
+
+	res2 := integral.Test_integral_simpson(x_axis, y_axis)
+	fmt.Printf("\n\nReturning the sum bellow the curve with the simpson method %.15f\n", res2)
+
+	res3 := integral.Test_integral_romberg(y_axis)
+	fmt.Printf("\n\nReturning the sum bellow the curve with the romberg method %2.f", res3)
 
 }
 
-func interpolation_example() {
+func Interpolation_example() {
 
 }

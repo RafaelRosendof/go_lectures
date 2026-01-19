@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math_test/economy"
 	examplewrapper "math_test/example_wrapper"
 	"math_test/scraping"
 )
@@ -20,4 +21,8 @@ func main() {
 	figas, _ := scraping.ScrapingTest("PETR4.SA")
 
 	fmt.Println(figas)
+
+	economy.Minimal_squares(figas)
+
+	examplewrapper.Integration_example()
 }
